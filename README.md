@@ -3,6 +3,9 @@
 ## Overview
 
 This document explains the Spanning Tree Protocol (STP) configuration and port role selection process used in this lab topology with 5 switches (SW1–SW5).
+
+
+
 ![Diagram](principal.png)
 
 ---
@@ -50,7 +53,6 @@ SW1# show spanning-tree detail
 SW1# show spanning-tree interface gigabitEthernet 0/0 detail
 ```
 
-![Path Cost Calculation](images/cost.png)
 
 ---
 
@@ -74,7 +76,7 @@ SW3# show spanning-tree
 SW5# show spanning-tree
 ```
 
-![Root Port Selection](images/root-port.png)
+![Root Port Selection](rp.png)
 
 ---
 
@@ -99,7 +101,7 @@ SW4# show spanning-tree detail
 SW4# show spanning-tree interface gigabitEthernet 0/0
 ```
 
-![Designated Port Selection](images/designated-port.png)
+![Designated Port Selection](D.png)
 
 ---
 
@@ -120,7 +122,7 @@ SW1# show spanning-tree
 SW1# show spanning-tree summary
 ```
 
-![Blocked Port](images/blocked-port.png)
+![Blocked Port](BK.png)
 
 ---
 
