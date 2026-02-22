@@ -3,6 +3,7 @@
 ## Overview
 
 This document explains the Spanning Tree Protocol (STP) configuration and port role selection process used in this lab topology with 5 switches (SW1–SW5).
+![Diagram](images/root-bridge.png)
 
 ---
 
@@ -22,7 +23,6 @@ SW4(config)# spanning-tree vlan 1 root primary
 SW4# show spanning-tree
 ```
 
-![Root Bridge Selection](images/root-bridge.png)
 
 ---
 
@@ -134,8 +134,154 @@ SW1# show spanning-tree summary
 
 ---
 
-## Topology Notes
+## config file
 
-- **Root Bridge:** SW4 (manually configured as primary)
-- **Link type:** Gigabit Ethernet (cost = 4 per hop)
-- **Protocol:** IEEE 802.1D Spanning Tree Protocol
+**SW1
+```bash
+VLAN0001
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    24577
+             Address     50e7.4100.4700
+             Cost        8
+             Port        1 (GigabitEthernet0/0)
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    32769  (priority 32768 sys-id-ext 1)
+             Address     5061.cf00.4400
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  300 sec
+
+Interface           Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+Gi0/0               Root FWD 4         128.1    P2p
+Gi0/1               Altn BLK 4         128.2    P2p
+Gi0/2               Desg FWD 4         128.3    P2p
+Gi0/3               Desg FWD 4         128.4    P2p
+Gi1/0               Desg FWD 4         128.5    P2p
+Gi1/1               Desg FWD 4         128.6    P2p
+Gi1/2               Desg FWD 4         128.7    P2p
+
+```
+**SW2
+```bash
+VLAN0001
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    24577
+             Address     50e7.4100.4700
+             Cost        4
+             Port        2 (GigabitEthernet0/1)
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    32769  (priority 32768 sys-id-ext 1)
+             Address     5009.8200.4500
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  300 sec
+
+Interface           Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+Gi0/0               Desg FWD 4         128.1    P2p
+Gi0/1               Root FWD 4         128.2    P2p
+Gi0/2               Desg FWD 4         128.3    P2p
+Gi0/3               Desg FWD 4         128.4    P2p
+Gi1/0               Desg FWD 4         128.5    P2p
+Gi1/1               Desg FWD 4         128.6    P2p
+Gi1/2               Desg FWD 4         128.7    P2p
+
+
+```
+**SW3
+```bash
+Switch#sh sp
+
+VLAN0001
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    24577
+             Address     50e7.4100.4700
+             Cost        4
+             Port        4 (GigabitEthernet0/3)
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    32769  (priority 32768 sys-id-ext 1)
+             Address     50db.6800.4600
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  300 sec
+
+Interface           Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+Gi0/0               Desg FWD 4         128.1    P2p
+Gi0/1               Altn BLK 4         128.2    P2p
+Gi0/2               Altn BLK 4         128.3    P2p
+Gi0/3               Root FWD 4         128.4    P2p
+Gi1/0               Desg FWD 4         128.5    P2p
+Gi1/1               Desg FWD 4         128.6    P2p
+Gi1/2               Desg FWD 4         128.7    P2p
+
+
+
+```
+
+**SW4
+```bash
+
+VLAN0001
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    24577
+             Address     50e7.4100.4700
+             This bridge is the root
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    24577  (priority 24576 sys-id-ext 1)
+             Address     50e7.4100.4700
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  300 sec
+
+Interface           Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+Gi0/0               Desg FWD 4         128.1    P2p
+Gi0/1               Desg FWD 4         128.2    P2p
+Gi0/2               Desg FWD 4         128.3    P2p
+Gi0/3               Desg FWD 4         128.4    P2p
+Gi1/0               Desg FWD 4         128.5    P2p
+Gi1/1               Desg FWD 4         128.6    P2p
+Gi1/2               Desg FWD 4         128.7    P2p
+Gi1/3               Desg FWD 4         128.8    P2p
+ --More--
+
+
+
+
+```
+
+**SW5
+```bash
+
+VLAN0001
+Switch#sh spanning-tree
+
+VLAN0001
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    24577
+             Address     50e7.4100.4700
+             Cost        4
+             Port        2 (GigabitEthernet0/1)
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    32769  (priority 32768 sys-id-ext 1)
+             Address     5084.bf00.4800
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  300 sec
+
+Interface           Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+Gi0/0               Desg FWD 4         128.1    P2p
+Gi0/1               Root FWD 4         128.2    P2p
+Gi0/2               Altn BLK 4         128.3    P2p
+Gi0/3               Desg FWD 4         128.4    P2p
+Gi1/0               Desg FWD 4         128.5    P2p
+Gi1/1               Desg FWD 4         128.6    P2p
+Gi1/2               Desg FWD 4         128.7    P2p
+
+
+
+
+```
