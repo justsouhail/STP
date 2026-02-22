@@ -1,4 +1,3 @@
-# STP
 # Spanning Tree Protocol (STP) Lab
 
 ## Overview
@@ -11,16 +10,19 @@ This document explains the Spanning Tree Protocol (STP) configuration and port r
 
 STP selects the Root Bridge based on the **lowest Bridge ID (BID)**, which is a combination of priority and MAC address.
 
-> **In this lab:** Root Bridge selection is done **manually** using the `primary` keyword.
+> **In this lab:** Root Bridge selection is done **manually** using the `primary` keyword. SW4 is configured as the Root Bridge.
 
-```
-SW4 is configured as the Root Bridge (Spanning Tree Primary)
-```
-
-**Configuration example:**
-```
+**Configure SW4 as Root Bridge:**
+```bash
 SW4(config)# spanning-tree vlan 1 root primary
 ```
+
+**Verify Root Bridge:**
+```bash
+SW4# show spanning-tree
+```
+
+![Root Bridge Selection](images/root-bridge.png)
 
 ---
 
@@ -38,6 +40,18 @@ STP calculates the cumulative cost from each switch to the Root Bridge:
 | SW4    | 0 *(Root Bridge)*        |
 | SW5    | 4                        |
 
+**Verify path cost on any switch:**
+```bash
+SW1# show spanning-tree detail
+```
+
+**Check interface cost:**
+```bash
+SW1# show spanning-tree interface gigabitEthernet 0/0 detail
+```
+
+![Path Cost Calculation](images/cost.png)
+
 ---
 
 ## 3. Root Port (RP) Selection
@@ -52,6 +66,16 @@ Each non-root switch selects **one Root Port** — the port that provides the **
 2. Lowest sender Bridge ID
 3. Lowest sender Port ID
 
+**Verify Root Port on each switch:**
+```bash
+SW1# show spanning-tree
+SW2# show spanning-tree
+SW3# show spanning-tree
+SW5# show spanning-tree
+```
+
+![Root Port Selection](images/root-port.png)
+
 ---
 
 ## 4. Designated Port (DP) Selection
@@ -65,6 +89,18 @@ A Designated Port is selected on **every network segment**. It forwards traffic 
 
 > Every Root Port on a non-root switch has a corresponding Designated Port on the other end of the link.
 
+**Verify Designated Ports:**
+```bash
+SW4# show spanning-tree detail
+```
+
+**Check a specific interface role:**
+```bash
+SW4# show spanning-tree interface gigabitEthernet 0/0
+```
+
+![Designated Port Selection](images/designated-port.png)
+
 ---
 
 ## 5. Blocked Port (BLK)
@@ -74,15 +110,27 @@ Any port that is **not elected** as a Root Port or Designated Port is placed in 
 - Blocked ports do **not** forward traffic.
 - They continue to receive BPDUs to stay aware of topology changes.
 
+**Verify Blocked Ports:**
+```bash
+SW1# show spanning-tree
+```
+
+**Check all port states across all VLANs:**
+```bash
+SW1# show spanning-tree summary
+```
+
+![Blocked Port](images/blocked-port.png)
+
 ---
 
 ## Summary Table
 
-| Port Role          | Direction         | State      | Purpose                          |
-|--------------------|-------------------|------------|----------------------------------|
-| Root Port (RP)     | Toward Root       | Forwarding | Best path to Root Bridge         |
-| Designated Port (DP) | Away from Root  | Forwarding | Forwards traffic on each segment |
-| Blocked Port (BLK) | N/A               | Blocking   | Prevents loops                   |
+| Port Role             | Direction       | State      | Purpose                          |
+|-----------------------|-----------------|------------|----------------------------------|
+| Root Port (RP)        | Toward Root     | Forwarding | Best path to Root Bridge         |
+| Designated Port (DP)  | Away from Root  | Forwarding | Forwards traffic on each segment |
+| Blocked Port (BLK)    | N/A             | Blocking   | Prevents loops                   |
 
 ---
 
