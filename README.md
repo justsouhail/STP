@@ -3,7 +3,7 @@
 ## Overview
 
 This document explains the Spanning Tree Protocol (STP) configuration and port role selection process used in this lab topology with 5 switches (SW1–SW5).
-![Diagram](images/root-bridge.png)
+![Diagram](principal.png)
 
 ---
 
